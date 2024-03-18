@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2 >Active Listings</h2>
+
+<ul>
+	{% for p in context %}
+			<li><div>
+				<p><h3>Category: {{p.cat}}</h3></p>
+</div>
+
+{% if p.photo %}
+	<p ><img width = 100 src="{{p.photo.url}}"></p>
+{% endif %}
+				<h2>{{p.title}}</h2>
+	{% autoescape on %}
+	{{p.content|linebreaks|truncatewords:50}}
+	{% endautoescape %}
+
+				{% if user.is_authenticated %}
+				{% endif %}
+				<p><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
+
+			</li>
+
+	{% endfor %}
+</ul>
+
+
+{% endblock %}

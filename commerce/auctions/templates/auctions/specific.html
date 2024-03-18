@@ -1,0 +1,55 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h1>{{context.title}}</h1>
+
+{% if context.photo %}
+<p><img width = 200 src="{{context.photo.url}}"></p>
+{% endif %}
+
+{{context.content|linebreaks}}
+{%if bid %}
+<p>Current bid: {{bid}}</p>
+{% else %}
+<p>Current bid: {{context.start_bid}}$</p>
+{% endif %}
+{% if user.is_authenticated %}
+<p><a href="{% url 'make_bid' context.id%}">make a bid</a></p>
+{% endif %}
+
+{% if user.is_authenticated %}
+{% if b %}
+    <a href="{% url 'watchlist_add' context.id %}" role="button" >Delete from Watchlist</a>
+{% else %}
+<a href="{% url 'watchlist_add' context.id %}" role="button" >Add to Watchlist</a>
+{% endif %}
+{% endif %}
+
+
+{% if user.is_authenticated %}
+{% if is_creator %}
+    <p><a href="{% url 'close_listing' context.id %}">Close listing</a></p>
+{% endif %}
+{% endif %}
+
+
+{% if user.is_authenticated %}
+<form action="{% url 'specific' context.id %}" method="post">
+{% csrf_token %}
+
+    {{form.as_p}}
+<button type="submit">Add comment</button>
+</form>
+{% endif %}
+<br>
+
+{% if coms %}
+{% for c in coms %}
+<strong>{{c.commentator}}</strong>
+<p>{{c.comment}}</p>
+<br>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
